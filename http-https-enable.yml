@@ -1,0 +1,20 @@
+---
+- name: Opening ports 80 and 443 (firewalld)
+  hosts: ansibletarget
+  become: yes
+
+  tasks:
+  - name: Opening ports 80
+    ansible.posix.firewalld:
+      service: http
+      permanent: yes
+      state: enabled
+  - name: Opening ports 443
+    ansible.posix.firewalld:
+      service: https
+      permanent: yes
+      state: enabled
+  - name: Restarting firewalld
+    ansible.builtin.service:
+      name: firewalld
+      state: restarted
