@@ -1,0 +1,22 @@
+---
+- name: Nginx
+  hosts: ansibletarget
+  become: yes
+
+  tasks:
+  - name:  local nginx.repo create
+    copy:
+      content: "[nginx-mainline]\nname=nginx mainline repo\nbaseurl=http://nginx.org/packages/mainline/centos/$releasever/$basearch/\ngpgcheck=1\nenabled=1\ngpgkey=https://nginx.org/keys/nginx_signing.key\nmodule_hotfixes=true"
+      dest: "/etc/yum.repos.d/nginx.repo"
+      backup: yes
+      owner: root
+      group: root
+      mode: 0644
+  - name: Nginx installation
+    yum:
+      name: nginx
+      state: latest
+  - name: Nginx start
+    ansible.builtin.service:
+      name: nginx
+      state: started
